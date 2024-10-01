@@ -1,0 +1,124 @@
+/* Reset and body styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.app {
+  text-align: center;
+  padding: 30px;
+  width: max(50vw, 500px);
+  background-color: hsl(192, 12%, 92%);
+  padding-block: 5rem;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+p {
+  color: #777;
+  margin-bottom: 20px;
+}
+
+/* Flashcard container perspective */
+.flashcard-container {
+  perspective: 1000px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+/* Flashcard front and back styles */
+.flashcard {
+  width: 300px;
+  height: 200px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
+  cursor: pointer;
+  margin-inline: auto;
+}
+
+.flashcard.flip {
+  transform: rotateX(180deg); /* Change this to rotateX for vertical flip */
+}
+
+/* Front and back faces of the card */
+.flashcard .front,
+.flashcard .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backface-visibility: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background-color: hsl(197, 4%, 63%);
+  border: black solid 1px;
+  border-radius: 10px;
+}
+
+.flashcard .back {
+  background-color: hsl(197, 4%, 63%);
+  transform: rotateX(180deg); /* This also needs to rotateX */
+}
+
+.flashcard .content {
+  font-size: 1.2rem;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Button styling */
+button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+.description {
+  text-align: left;
+  color: #424141;
+}
+
+.difficulty {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: #fff;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.easy {
+  background-color: green; /* Green for easy */
+}
+
+.medium {
+  background-color: darkorange; /* Dark yellow for medium */
+}
+
+.hard {
+  background-color: red; /* Red for hard */
+}
