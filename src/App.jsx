@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './index.css';
 import Flashcard from './components/flashcard';
 import DifficultyLabel from './components/DifficultyLabel';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import 'font-awesome/css/font-awesome.min.css';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 const sleep = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -13,88 +13,106 @@ const sleep = (ms) => {
 const App = () => {
   const [currentCard, setCurrentCard] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [guess, setGuess] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [cardOrder, setCardOrder] = useState([]);
+  const [feedback, setFeedback] = useState(''); // To show feedback
 
   // Array of flashcards
   const cards = [
     {
-      question: 'What is simple harmonic motion (SHM)?',
-      answer:
-        'A type of oscillatory motion where the restoring force is proportional to the displacement and acts in the opposite direction.',
+      question: 'What is the symbol for speed?',
+      answer: 'v',
       difficulty: 'easy',
     },
     {
-      question: 'What is the formula for the period of a pendulum?',
-      answer:
-        'T = 2π√(L/g), where T is the period, L is the length of the pendulum, and g is the acceleration due to gravity.',
-      difficulty: 'medium',
-    },
-    {
-      question: 'What is resonance in oscillatory systems?',
-      answer:
-        'Resonance occurs when the frequency of external force matches the natural frequency of the system, leading to large amplitude oscillations.',
-      difficulty: 'hard',
-    },
-    {
-      question: 'What is the equation for the wave speed?',
-      answer:
-        'Wave speed (v) is given by v = fλ, where f is the frequency and λ is the wavelength.',
+      question: 'What is the SI unit of force?',
+      answer: 'newton',
       difficulty: 'easy',
     },
     {
-      question: 'What is damping in oscillations?',
-      answer:
-        'Damping is the gradual loss of amplitude in an oscillatory system due to resistive forces like friction or air resistance.',
-      difficulty: 'medium',
-    },
-    {
-      question: 'What is the principle of superposition?',
-      answer:
-        'The principle of superposition states that when two or more waves overlap, the resultant displacement is the algebraic sum of the displacements of individual waves.',
-      difficulty: 'medium',
-    },
-    {
-      question:
-        'What is the difference between transverse and longitudinal waves?',
-      answer:
-        'In transverse waves, particles move perpendicular to the direction of wave propagation, while in longitudinal waves, particles move parallel to the direction of wave propagation.',
-      difficulty: 'hard',
-    },
-    {
-      question: 'What is a standing wave?',
-      answer:
-        'A standing wave is a wave pattern formed when two waves of the same frequency and amplitude travel in opposite directions and interfere, resulting in nodes and antinodes.',
-      difficulty: 'medium',
-    },
-    {
-      question: 'What is the formula for the angular frequency of SHM?',
-      answer:
-        'The angular frequency (ω) is given by ω = 2πf, where f is the frequency of oscillation.',
+      question: 'What is the symbol for wavelength?',
+      answer: 'λ',
       difficulty: 'easy',
     },
     {
-      question: 'What is the wave equation?',
-      answer:
-        'The wave equation is a second-order partial differential equation: ∂²y/∂t² = v²∂²y/∂x², describing how waves propagate through a medium.',
-      difficulty: 'hard',
+      question: 'What is the unit of frequency?',
+      answer: 'hertz',
+      difficulty: 'easy',
+    },
+    {
+      question: 'What is the symbol for time?',
+      answer: 't',
+      difficulty: 'easy',
+    },
+    {
+      question: 'What is the SI unit for mass?',
+      answer: 'kilogram',
+      difficulty: 'easy',
+    },
+    {
+      question: 'What is the charge of an electron?',
+      answer: 'negative',
+      difficulty: 'medium',
+    },
+    {
+      question: 'What is the symbol for gravitational constant?',
+      answer: 'G',
+      difficulty: 'medium',
+    },
+    {
+      question: 'What is the unit of energy?',
+      answer: 'joule',
+      difficulty: 'easy',
+    },
+    {
+      question: 'What is the symbol for acceleration due to gravity?',
+      answer: 'g',
+      difficulty: 'easy',
     },
   ];
 
+  useEffect(() => {
+    const randomOrder = [...Array(cards.length).keys()].sort(
+      () => Math.random() - 0.5
+    );
+    setCardOrder(randomOrder);
+  }, []);
+
   // Function to display a random card
-  const showNextCard = async () => {
+  const showNextCard = async (direction) => {
     if (showAnswer) {
-      setShowAnswer(false); // First hide the answer
-      console.log('Hiding answer');
-      // delay the next card by 1 second
+      setShowAnswer(false);
       await sleep(500);
     }
-    let randomIndex = Math.floor(Math.random() * cards.length);
-    while (randomIndex === currentCard) {
-      randomIndex = Math.floor(Math.random() * cards.length);
-    }
-    console.log(randomIndex);
 
-    setCurrentCard(randomIndex);
-    setShowAnswer(false); // Reset to show the question
+    setErrorMessage(''); // Clear the error message
+    let nextIndex = currentCard + direction;
+
+    // Keep the index in bounds
+    if (nextIndex >= cards.length) nextIndex = 0;
+    if (nextIndex < 0) nextIndex = cards.length - 1;
+
+    setCurrentCard(nextIndex);
+    setShowAnswer(false);
+    setFeedback('');
+    setGuess(''); // Clear the guess input
+  };
+
+  const handleSubmitGuess = () => {
+    console.log(1);
+    if (guess.trim() === '') {
+      setFeedback('Please enter your guess!');
+      return;
+    }
+
+    // Case-insensitive comparison
+    if (guess.toLowerCase() === cards[currentCard].answer.toLowerCase()) {
+      setFeedback('Correct!');
+    } else {
+      setFeedback(`Wrong! The correct answer is: ${cards[currentCard].answer}`);
+    }
+    setShowAnswer(true);
   };
 
   return (
@@ -116,9 +134,28 @@ const App = () => {
           showAnswer={showAnswer}
           toggleShowAnswer={() => setShowAnswer(!showAnswer)}
         />
-        <button onClick={showNextCard}>
-          <FontAwesomeIcon icon={faArrowRight} />
-        </button>
+
+        <input
+          type="text"
+          placeholder="Enter your guess"
+          value={guess}
+          onChange={(e) => setGuess(e.target.value)}
+          className="guess-input"
+        />
+
+        {feedback && <p className="error">{feedback}</p>}
+
+        <div className="button-group">
+          <button onClick={() => showNextCard(-1)}>
+            <FontAwesomeIcon icon={faArrowLeft} /> Previous
+          </button>
+
+          <button onClick={handleSubmitGuess}>Submit</button>
+
+          <button onClick={() => showNextCard(1)}>
+            Next <FontAwesomeIcon icon={faArrowRight} />
+          </button>
+        </div>
       </div>
     </>
   );

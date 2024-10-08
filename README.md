@@ -15,6 +15,10 @@ The following **required** functionality is completed:
 - [x] **A list of card pairs is created**
 - [x] **Clicking on the card shows the corresponding component of the information pair**
 - [x] **Clicking the next button displays a random new card**
+- [x] **The user can enter their guess in a box before seeing the flipside of the card**
+- [x] **Clicking on a submit button shows visual feedback about whether the answer was correct or incorrect**
+- [x] **A back button is displayed on the card and can be used to return to the previous card in a set sequence**
+- [x] **A next button is displayed on the card and can be used to navigate to the next card in a set sequence**
 
 The following **optional** features are implemented:
 
@@ -26,7 +30,7 @@ The following **optional** features are implemented:
 
 Here's a walkthrough of implemented required features:
 
-<img src='./src/assets/flashcard_part1_walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='./src/assets/flashcard_part2_walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 <!-- Replace this with whatever GIF tool you used! -->
 
